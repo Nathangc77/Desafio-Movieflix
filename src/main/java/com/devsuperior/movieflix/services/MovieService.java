@@ -3,6 +3,7 @@ package com.devsuperior.movieflix.services;
 import com.devsuperior.movieflix.Utils.Utils;
 import com.devsuperior.movieflix.dto.MovieCardDTO;
 import com.devsuperior.movieflix.dto.MovieDetailsDTO;
+import com.devsuperior.movieflix.dto.MovieReviewsDTO;
 import com.devsuperior.movieflix.entities.Movie;
 import com.devsuperior.movieflix.projections.MovieProjection;
 import com.devsuperior.movieflix.repositories.MovieRepository;
@@ -28,6 +29,7 @@ public class MovieService {
         return new MovieDetailsDTO(entity);
     }
 
+    @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
     public Page<MovieCardDTO> findByGenre(String genreId, Pageable pageable) {
         Long id = null;
@@ -42,5 +44,16 @@ public class MovieService {
 
         List<MovieCardDTO> dtos = entities.stream().map(MovieCardDTO::new).toList();
         return new PageImpl<>(dtos, page.getPageable(), page.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public MovieReviewsDTO findMovieWithReview(Long id) {
+        Movie entity = repository.searchMovieWithReviews(id);
+
+        if (entity == null) {
+            throw new ResourceNotFoundException("Entity not found");
+        }
+
+        return new MovieReviewsDTO(entity, entity.getReviews());
     }
 }

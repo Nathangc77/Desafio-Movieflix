@@ -33,4 +33,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query("SELECT obj FROM Movie obj WHERE obj.id IN :ids")
     List<Movie> searchMovieByIds(List<Long> ids);
+
+    @Query("SELECT obj FROM Movie obj JOIN FETCH obj.reviews WHERE obj.id = :id")
+    Movie searchMovieWithReviews(Long id);
 }
