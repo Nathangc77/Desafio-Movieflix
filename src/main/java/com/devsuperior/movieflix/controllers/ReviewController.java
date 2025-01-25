@@ -23,7 +23,7 @@ public class ReviewController {
     public ResponseEntity<ReviewDTO> insert(@Valid @RequestBody ReviewDTO dto) {
         dto = service.insert(dto);
 
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}/reviews").buildAndExpand(dto.getMovieId()).toUri();
 
         return ResponseEntity.created(uri).body(dto);
     }
